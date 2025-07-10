@@ -11,7 +11,7 @@ st.title(f"Welcome, {st.session_state.get('name', '').title()}!".upper())
 
 history_api_url = "http://localhost:8000/api/v1/game/history"  # Update as needed
 history_payload = {"user_id": st.session_state["user_id"]}
-history_data = {"correct_words": 0, "games_lost": 0, "number_games": 0, "word_games": 0}
+history_data = {"correct_words": 0, "correct_numbers": 0, "number_games": 0, "word_games": 0}
 
 try:
     response = requests.post(history_api_url, json=history_payload)
@@ -25,8 +25,8 @@ except Exception as e:
 
 # --- Show stats cards ---
 stats = [
-    ("Games Lost", history_data.get("games_lost", 0)),
-    ("Games Word Guesses", history_data.get("correct_words", 0)),
+    ("Correct Number Guess", history_data.get("correct_numbers", 0)),
+    ("Correct Word Guesses", history_data.get("correct_words", 0)),
     ("Number Games", history_data.get("number_games", 0)),
     ("Word Games", history_data.get("word_games", 0)),
 ]

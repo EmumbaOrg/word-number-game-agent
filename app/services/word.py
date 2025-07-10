@@ -14,7 +14,6 @@ class WordGameService:
             config=config,
         )
 
-        print(f"Response from word_selected: {response}")
         if "__interrupt__" in response:
             return {"message": response["__interrupt__"][0].value}
     

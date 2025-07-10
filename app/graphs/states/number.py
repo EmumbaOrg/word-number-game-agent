@@ -10,6 +10,8 @@ class NumberGameState(MessagesState):
   upper_bound: int
   guess_count: int
   game_in_progress: bool
+  is_number_correct: bool = False
+
 
 class NumberToolState(AgentState, NumberGameState):
     pass
@@ -23,4 +25,5 @@ def num_init_state() -> NumberGameState:
         guess_count=0,
         game_in_progress=False,
         user_answer=None,
+        is_number_correct=False,
     )

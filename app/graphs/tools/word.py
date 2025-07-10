@@ -25,6 +25,7 @@ def generate_questions(state: Annotated[WordToolState, InjectedState], tool_call
                     {chr(10).join([f"Q{i+1}: {qa['question']} | User: {qa['answer']}" for i, qa in enumerate(state["asked_questions"])]) if state["asked_questions"] else "None yet."}
 
                 Based on the above, generate the next yes/no question that will best narrow down the possible words. 
+                Do not ask direct questions about the word itself, but rather about its characteristics or properties.
                 Do not repeat previous questions. Only return the next question as a single sentence.
             """
 

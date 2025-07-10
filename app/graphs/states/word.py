@@ -14,7 +14,7 @@ class WordGameState(MessagesState):
     asked_questions: List[Dict[str, str]] = []
     current_question_index: int = 0
     final_guess: str = None
-    is_guess_correct: bool = False
+    is_word_correct: bool = False
 
 class WordToolState(AgentState, WordGameState):
     """
@@ -37,5 +37,5 @@ def word_init_state() -> WordGameState:
         asked_questions = [],
         current_question_index = 0,
         final_guess = "",
-        is_guess_correct = False
+        is_word_correct = False
     )

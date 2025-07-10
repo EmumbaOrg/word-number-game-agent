@@ -51,7 +51,7 @@ class SupervisorService:
         
         return {
             "correct_words": state.values.get("correct_words", 0),
-            "games_lost": state.values.get("total_games_lost", 0),
+            "correct_numbers": state.values.get("correct_numbers", 0),
             "number_games": state.values.get("total_number_games", 0),
             "word_games": state.values.get("total_word_games", 0),
         }

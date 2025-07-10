@@ -64,22 +64,44 @@ def number_question_user(state: NumberGameState) -> NumberGameState:
     state["user_answer"] = response.strip().lower()
     return state
 
-def end_number_game(state: SupervisorState):
+def final_number_guess(state: NumberGameState) -> NumberGameState:
     """
-    Node function to end the number guessing game.
-    It updates the game state to indicate that the game is no longer in progress and appends a final message to the conversation history.
+    Node that interrupts the flow to present the agent's final guess to the human user and asks if the guess is correct.
+    The user's answer is then used to update the state with whether the guess was correct.
+
     Args:
         state (NumberGameState): The current state of the number guessing game.
+
     Returns:
-        Union[Command, NumberGameState]: A Command to end the game or the updated game state.
+        NumberGameState: The updated game state after recording the correctness of the guess.
     """
-    num_state = num_init_state()
+    guess = state.get("current_guess", None)
+    if guess:
+        response = interrupt(f"My guess is: '{guess}'. Is this correct? (yes/no)")
+        state["messages"].append(HumanMessage(content=response))
+        state["is_number_correct"] = response.strip().lower() == "yes"
+    return state
+
+def end_number_game(state: SupervisorState) -> Command:
+    """
+    Node function to end the number guessing game.
+    Updates stats, resets number game state, and appends a final message.
+
+    Args:
+        state (NumberGameState): The current state of the number guessing game.
+
+    Returns:
+        Command: A Command to end the game with the updated state.
+    """
     state["total_number_games"] += 1
-    state["correct_words"] += 1 
-    
+    is_number_correct = state.get("is_number_correct", None)
+    if is_number_correct:
+        state["correct_numbers"] = state.get("correct_numbers", 0) + 1
+
+    state["messages"].append(AIMessage(content="The number guessing game has ended. Thank you for playing!"))
+    num_state = num_init_state()
     state = {
-        **state,  # Unpack the SupervisorState to include all fields
-        **num_state,  # Reset number game state
+        **state,
+        **num_state,
     }
-    state["messages"].append(AIMessage(content=state["messages"][-1].content))
-    return Command(goto=END, update=state)
+    return state

@@ -82,6 +82,11 @@ for idx, guess in enumerate(st.session_state["word_guess_history"]):
                         st.switch_page("pages/word.py")
                     else:
                         st.success(guess_data.get("message", "Guess processed successfully."))
+                        # Remove word_game_state and word_guess_history from session_state
+                        if "word_game_state" in st.session_state:
+                            del st.session_state["word_game_state"]
+                        if "word_guess_history" in st.session_state:
+                            del st.session_state["word_guess_history"]
                         time.sleep(3)
                         st.switch_page("pages/main.py")
                 else:

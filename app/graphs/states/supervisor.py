@@ -15,8 +15,8 @@ class SupervisorState(MessagesState):
     total_number_games: int = 0
     total_word_games: int = 0
     correct_words: int = 0
-    total_games_lost: int = 0
-
+    correct_numbers: int = 0
+    
 
     #state variables used by the number game
     current_guess: int
@@ -25,6 +25,7 @@ class SupervisorState(MessagesState):
     upper_bound: int
     guess_count: int
     game_in_progress: bool
+    is_number_correct: bool = False
 
     # state variables used by the word game
     word_game_status: Literal["AWAITING_WORD", "ASKING_QUESTIONS", "GUESSING_WORD", "COMPLETED"] = "AWAITING_WORD"
@@ -33,7 +34,7 @@ class SupervisorState(MessagesState):
     asked_questions: List[Dict[str, str]] = []
     current_question_index: int = 0
     final_guess: str = None
-    is_guess_correct: bool = False
+    is_word_correct: bool = False
 
 
 def init_state() -> SupervisorState:
@@ -44,9 +45,8 @@ def init_state() -> SupervisorState:
         **num_state,  # Unpack the number game state into the supervisor state
         **word_state,  # Unpack the word game state into the supervisor state
         status="AWAITING_GAME",
-        total_number_games=10,
+        total_number_games=0,
         total_word_games=0,
         correct_words=0,
-        total_games_lost=0,
-        
+        correct_numbers=0,    
     )

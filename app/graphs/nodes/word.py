@@ -2,7 +2,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import interrupt, Command
 
 from app.graphs.states.supervisor import SupervisorState
-from app.graphs.states.word import WordGameState
+from app.graphs.states.word import WordGameState, word_init_state
 from app.graphs.agents.word import word_guessing_agent
 
 def choose_word(state: WordGameState) -> WordGameState:
@@ -82,7 +82,7 @@ def final_guess(state: WordGameState) -> WordGameState:
     if guess:
         response = interrupt(f"My guess is: '{guess}'. Is this correct? (yes/no)")
         state["messages"].append(HumanMessage(content=response))
-        state["is_guess_correct"] = response.strip().lower() == "yes"
+        state["is_word_correct"] = response.strip().lower() == "yes"
 
     return state
 
@@ -100,9 +100,14 @@ def end_word_game(state: SupervisorState) -> Command:
     """
     state["word_game_status"] = "COMPLETED"
     state["total_word_games"] += 1
-    is_guess_correct = state.get("is_guess_correct", None)
-    if is_guess_correct:
+    is_word_correct = state.get("is_word_correct", None)
+    if is_word_correct:
         state["correct_words"] += 1
         
     state["messages"].append(AIMessage(content="The word guessing game has ended. Thank you for playing!"))
+    word_inital_state = word_init_state()
+    state = {
+        **state,
+        **word_inital_state,
+    }
     return state

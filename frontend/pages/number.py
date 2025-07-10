@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import requests
 
@@ -74,7 +75,6 @@ for idx, guess in enumerate(st.session_state["guess_history"]):
                 if response.status_code == 200:
                     guess_data = response.json()
                     # Add the new guess to the history
-                    print(guess_data)
                     if guess_data.get("status") != "success":
                         st.session_state["guess_history"].append({
                             "message": guess_data.get("message", "No message returned."),
@@ -82,8 +82,12 @@ for idx, guess in enumerate(st.session_state["guess_history"]):
                         })
                         st.switch_page("pages/number.py")
                     else:
-                        print("else here")
                         st.success(guess_data.get("message", "Guess processed successfully."))
+                        time.sleep(3)
+                        if "guess_history" in st.session_state:
+                            del st.session_state["guess_history"]
+                        if "number_game_state" in st.session_state:
+                            del st.session_state["number_game_state"]
                         st.switch_page("pages/main.py")
 
                 else:
