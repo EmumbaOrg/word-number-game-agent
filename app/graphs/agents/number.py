@@ -8,14 +8,12 @@ number_guessing_agent = create_react_agent(
     model=chat_model, 
     tools=[guess_number_tool],
     state_schema=NumberToolState,
-    prompt="""You are part of playing a number guessing game. 
-    User have already selected a number between 1 and 50.
-    Your task is to use the tool in that will return question that you can ask user.
-    This will narrow down the range of possible numbers.
-    If you cannot access the tool, you can simply respond that I can not access the tool.
-    You will not guess the number directly.
-    Keep using the tool until it return status as "guessing"
-    You will not ask the user to think of a number."""
-
-
+    prompt="""You are participating in a number guessing game. 
+    The user has already selected a number between 1 and 50.
+    Your objective is to utilize the provided tool to generate questions for the user, 
+    which will help narrow down the possible range of numbers.
+    If you are unable to access the tool, respond by stating that you cannot access the tool.
+    Do not attempt to guess the number directly.
+    Continue using the tool until its returned status is "guessing".
+    Do not instruct the user to think of a number."""
 )

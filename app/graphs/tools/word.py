@@ -3,19 +3,23 @@ from langchain_core.tools import tool, InjectedToolCallId
 from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 from langchain_core.messages import ToolMessage
+import logging
 
 from app.graphs.states.word import WordToolState
 from app.core.chat_model.main import chat_model
 
+logger = logging.getLogger(__name__)
+
 @tool("generate_questions", description="Generate questions for the word guessing game.")
-def generate_questions(state: Annotated[WordToolState, InjectedState], tool_call_id: Annotated[str, InjectedToolCallId]):
+def generate_questions(
+    state: Annotated[WordToolState, InjectedState],
+    tool_call_id: Annotated[str, InjectedToolCallId]
+) -> Command:
     """
-    Uses the LLM to generate the next yes/no question, considering the list of possible words,
-    the questions already asked, and the user's answers.
+    Generates the next yes/no question for the word guessing game using an LLM.
+    Considers the list of possible words, previously asked questions, and user answers.
+    Returns a Command object with the updated state and a ToolMessage containing the next question.
     """
-
-
-    # Prepare the prompt for the LLM
     try:
         prompt = f"""
                 You are an AI assistant helping to guess a word from this list: {', '.join(state["word_list"])}.
@@ -29,8 +33,8 @@ def generate_questions(state: Annotated[WordToolState, InjectedState], tool_call
                 Do not repeat previous questions. Only return the next question as a single sentence.
             """
 
-        # Call the LLM
         question = chat_model.invoke(prompt).content.strip()
+
         return Command(update={
             "asked_questions": state["asked_questions"] + [{"question": question, "answer": None}],
             "current_question_index": state["current_question_index"] + 1,
@@ -41,15 +45,25 @@ def generate_questions(state: Annotated[WordToolState, InjectedState], tool_call
             )],
         })
     except Exception as e:
-        print(f"Error generating question: {e}")
+        logger.error(f"Error generating question: {e}")
+        
+        return Command(update={
+            "messages": [ToolMessage(
+                content="An error occurred while generating the next question.",
+                tool_call_id=tool_call_id
+            )],
+        })
 
 @tool("guess_word", description="Guess the word in the word guessing game.")
-def guess_word(state: Annotated[WordToolState, InjectedState], tool_call_id: Annotated[str, InjectedToolCallId]):
+def guess_word(
+    state: Annotated[WordToolState, InjectedState],
+    tool_call_id: Annotated[str, InjectedToolCallId]
+) -> Command:
     """
-    Uses the LLM to guess the user's word, considering the list of possible words,
+    Uses an LLM to guess the user's selected word based on the list of possible words,
     the questions asked, and the user's answers.
+    Returns a Command object with the final guess and a ToolMessage containing the guess.
     """
-
     try:
         prompt = f"""
                 You are an AI assistant. The user has selected a word from this list: {', '.join(state["word_list"])}.
@@ -62,6 +76,7 @@ def guess_word(state: Annotated[WordToolState, InjectedState], tool_call_id: Ann
             """
 
         guess = chat_model.invoke(prompt).content.strip()
+        
         return Command(update={
             "final_guess": guess,
             "word_game_status": "GUESSING_WORD",
@@ -71,4 +86,11 @@ def guess_word(state: Annotated[WordToolState, InjectedState], tool_call_id: Ann
             )],
         })
     except Exception as e:
-        print(f"Error guessing word: {e}")
+        logger.error(f"Error guessing word: {e}")
+        
+        return Command(update={
+            "messages": [ToolMessage(
+                content="An error occurred while guessing the word.",
+                tool_call_id=tool_call_id
+            )],
+        })
