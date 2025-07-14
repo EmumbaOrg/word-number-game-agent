@@ -2,8 +2,7 @@ from langgraph.types import interrupt, Command
 from langgraph.graph import  END
 from langchain_core.messages import AIMessage, HumanMessage
 
-from app.graphs.states.number import NumberGameState, num_init_state
-from app.graphs.states.supervisor import SupervisorState
+from app.graphs.states.number import NumberGameState
 from app.graphs.agents.number import number_guessing_agent
 
 def choose_number(state: NumberGameState) -> NumberGameState:

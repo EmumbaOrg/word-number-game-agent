@@ -2,8 +2,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import interrupt, Command
 from langgraph.graph import END
 
-from app.graphs.states.supervisor import SupervisorState
-from app.graphs.states.word import WordGameState, word_init_state
+from app.graphs.states.word import WordGameState
 from app.graphs.agents.word import word_guessing_agent
 
 def choose_word(state: WordGameState) -> WordGameState:
