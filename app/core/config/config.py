@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     LANGSMITH_TRACING: bool
     LANGSMITH_API_KEY: str
+    LANGSMITH_PROJECT: str
 
 
 settings = Settings()

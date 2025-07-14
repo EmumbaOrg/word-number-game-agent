@@ -1,5 +1,6 @@
 import logging
 from langgraph.types import Command
+from langsmith import tracing_context
 from app.graphs.main import supervisor
 
 logger = logging.getLogger(__name__)
@@ -25,10 +26,12 @@ class WordGameService:
         """
         try:
             config = {"configurable": {"thread_id": user_id}}
-            response = await supervisor.ainvoke(
-                Command(resume=user_will), 
-                config=config,
-            )
+            
+            with tracing_context(enabled=True):
+                response = await supervisor.ainvoke(
+                    Command(resume=user_will), 
+                    config=config,
+                )
 
             if "__interrupt__" in response:
                 return {"message": response["__interrupt__"][0].value}
@@ -54,10 +57,11 @@ class WordGameService:
             config = {"configurable": {"thread_id": user_id}}
             
             # Invoke the word guessing graph with the user's input
-            response = await supervisor.ainvoke(
-                Command(resume=user_input), 
-                config=config,
-            )
+            with tracing_context(enabled=True):
+                response = await supervisor.ainvoke(
+                    Command(resume=user_input), 
+                    config=config,
+                )
 
             if "__interrupt__" in response:
                 return {"message": response["__interrupt__"][0].value, "status": "guessing"}

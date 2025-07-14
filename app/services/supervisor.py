@@ -1,6 +1,7 @@
 import uuid
 
 from langchain_core.messages import HumanMessage
+from langsmith import tracing_context
 
 from app.graphs.main import supervisor
 from app.graphs.states.supervisor import init_state
@@ -25,17 +26,20 @@ class SupervisorService:
                 initial_state = init_state()
                 initial_state["messages"] = [HumanMessage(content=message)]
                 create_user_session(user_id)
-                response = await supervisor.ainvoke(
-                    initial_state,
-                    config={"configurable": {"thread_id": user_id}},
-                )
+
+                with tracing_context(enabled=True):
+                    response = await supervisor.ainvoke(
+                        initial_state,
+                        config={"configurable": {"thread_id": user_id}},
+                    )
             else:
-                response = await supervisor.ainvoke(
-                    {
-                        "messages": [HumanMessage(content=message)]
-                    },
-                    config={"configurable": {"thread_id": user_id}},
-                )
+                with tracing_context(enabled=True):
+                    response = await supervisor.ainvoke(
+                        {
+                            "messages": [HumanMessage(content=message)]
+                        },
+                        config={"configurable": {"thread_id": user_id}},
+                    )
 
             # Check if the response contains an interrupt message
             if "__interrupt__" in response:

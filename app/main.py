@@ -16,5 +16,5 @@ setup_logging()
 def read_root():
     return {"Hello": "World"}
 
-with tracing_context(enabled=True):
-    app.include_router(main_router, prefix=settings.API_V1_STR)
+
+app.include_router(main_router, prefix=settings.API_V1_STR)
