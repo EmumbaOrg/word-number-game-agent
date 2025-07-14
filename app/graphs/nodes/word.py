@@ -1,5 +1,6 @@
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import interrupt, Command
+from langgraph.graph import END
 
 from app.graphs.states.supervisor import SupervisorState
 from app.graphs.states.word import WordGameState, word_init_state
@@ -86,7 +87,7 @@ def final_guess(state: WordGameState) -> WordGameState:
 
     return state
 
-def end_word_game(state: SupervisorState) -> Command:
+def end_word_game(state: WordGameState) -> Command:
     """
     Node function for ending the word guessing game.
     This function is called when the game is over, either because the AI has guessed the word or the user has chosen to exit.
@@ -98,16 +99,7 @@ def end_word_game(state: SupervisorState) -> Command:
     Returns:
         WordGameState: The updated game state after appending the end game message.
     """
-    state["word_game_status"] = "COMPLETED"
-    state["total_word_games"] += 1
-    is_word_correct = state.get("is_word_correct", None)
-    if is_word_correct:
-        state["correct_words"] += 1
         
     state["messages"].append(AIMessage(content="The word guessing game has ended. Thank you for playing!"))
-    word_inital_state = word_init_state()
-    state = {
-        **state,
-        **word_inital_state,
-    }
-    return state
+    
+    return Command(goto=END, update=state)

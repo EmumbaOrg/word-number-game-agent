@@ -82,7 +82,7 @@ def final_number_guess(state: NumberGameState) -> NumberGameState:
         state["is_number_correct"] = response.strip().lower() == "yes"
     return state
 
-def end_number_game(state: SupervisorState) -> Command:
+def end_number_game(state: NumberGameState) -> Command:
     """
     Node function to end the number guessing game.
     Updates stats, resets number game state, and appends a final message.
@@ -93,15 +93,14 @@ def end_number_game(state: SupervisorState) -> Command:
     Returns:
         Command: A Command to end the game with the updated state.
     """
-    state["total_number_games"] += 1
-    is_number_correct = state.get("is_number_correct", None)
-    if is_number_correct:
-        state["correct_numbers"] = state.get("correct_numbers", 0) + 1
+    # state["total_number_games"] += 1
+    # is_number_correct = state.get("is_number_correct", None)
+    # if is_number_correct:
+    #     state["correct_numbers"] = state.get("correct_numbers", 0) + 1
 
-    state["messages"].append(AIMessage(content="The number guessing game has ended. Thank you for playing!"))
-    num_state = num_init_state()
-    state = {
-        **state,
-        **num_state,
-    }
-    return state
+    state["messages"] = [AIMessage(content="The number guessing game has ended. Thank you for playing!")]
+    
+    return Command(
+        goto=END,
+        update=state
+    )

@@ -2,9 +2,9 @@ from langgraph.graph import StateGraph, START, END
 
 from app.graphs.edges.number import end_number_game_edge
 from app.graphs.nodes.number import choose_number, guessing_number, number_question_user, end_number_game, final_number_guess
-from app.graphs.states.supervisor import SupervisorState
+from app.graphs.states.number import NumberGameState
 
-num_graph_builder = StateGraph(SupervisorState)
+num_graph_builder = StateGraph(NumberGameState)
 
 num_graph_builder.add_node("choose_number", choose_number)
 num_graph_builder.add_node("number_agent", guessing_number)

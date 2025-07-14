@@ -4,6 +4,9 @@ from langgraph.prebuilt import InjectedState
 from langgraph.graph import StateGraph, START, MessagesState
 from langgraph.types import Command
 
+from app.graphs.states.number import num_init_state 
+from app.graphs.states.word import word_init_state
+
 
 def create_handoff_tool(*, sub_graph_name: str, description: str | None = None):
     name = f"transfer_to_{sub_graph_name}"
@@ -20,9 +23,13 @@ def create_handoff_tool(*, sub_graph_name: str, description: str | None = None):
             "name": name,
             "tool_call_id": tool_call_id,
         }
+        if sub_graph_name == "number_graph":
+            init_state = num_init_state()
+        else:
+            init_state = word_init_state()
         return Command(
             goto=sub_graph_name,  
-            update={**state, "messages": state["messages"] + [tool_message]},  
+            update={**init_state},  
             graph=Command.PARENT,  
         )
 
