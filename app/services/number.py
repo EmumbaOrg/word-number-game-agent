@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class NumberGameService:
     
-    async def number_slected(self, user_will: str, user_id: str):
+    async def number_selected(self, user_will: str, user_id: str):
         """
         Handles the user's selection in the number game.
 

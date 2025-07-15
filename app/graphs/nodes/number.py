@@ -92,10 +92,6 @@ def end_number_game(state: NumberGameState) -> Command:
     Returns:
         Command: A Command to end the game with the updated state.
     """
-    # state["total_number_games"] += 1
-    # is_number_correct = state.get("is_number_correct", None)
-    # if is_number_correct:
-    #     state["correct_numbers"] = state.get("correct_numbers", 0) + 1
 
     state["messages"] = [AIMessage(content="The number guessing game has ended. Thank you for playing!")]
     

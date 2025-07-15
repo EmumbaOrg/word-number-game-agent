@@ -21,4 +21,6 @@ supervisor = (
     .compile(checkpointer=checkpointer)
 )
 
-# print(supervisor.get_graph().draw_ascii())
+
+print("Supervisor graph compiled successfully.")
+print(supervisor.get_graph().draw_mermaid())

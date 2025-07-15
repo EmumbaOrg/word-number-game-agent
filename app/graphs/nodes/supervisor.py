@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-async def num_sub_graph(state: SupervisorState, config) -> str:
+async def num_sub_graph(state: SupervisorState, config) -> SupervisorState:
     """
     Determine the sub-graph to transition to based on the current state.
     """
@@ -25,7 +25,7 @@ async def num_sub_graph(state: SupervisorState, config) -> str:
 
 
 
-async def word_sub_graph(state: SupervisorState, config) -> str:
+async def word_sub_graph(state: SupervisorState, config) -> SupervisorState:
     """
     Determine the sub-graph to transition to based on the current state.
     """
