@@ -8,7 +8,7 @@ This project is an interactive AI-powered game platform where users can play wor
 
 This project was developed primarily as a LangGraph assignment, with an emphasis on demonstrating advanced agent orchestration, state management, and GenAI integration using LangGraph and related tools. As a result, certain backend engineering best practices—such as robust session management, advanced error handling, and production-grade API design—may not be fully implemented in this codebase.
 
-While the core logic and agent flows are designed to showcase LangGraph capabilities, further enhancements in backend architecture, security, and scalability are recommended for production use. We appreciate your understanding and encourage contributions or suggestions to improve the engineering aspects of the project.
+While the core logic and agent flows are designed to showcase LangGraph capabilities, further enhancements in backend architecture, security, and scalability are recommended for production use.
 
 ---
 
